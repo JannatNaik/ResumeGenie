@@ -1,0 +1,178 @@
+CREATE DATABASE Resume;
+USE Resume;
+drop database Resume;
+CREATE TABLE user (
+    uid INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    Password_m VARCHAR(255) NOT NULL,
+    role ENUM('Admin', 'HR', 'Applicant') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+select * from user;
+drop table users;
+-- INSERT INTO user (fullname, email, Password_m, role) VALUES ('Drashti', 'd45@example.com', 'securePassword', 'Applicant');
+
+CREATE TABLE user_profile (
+    profile_id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NOT NULL,
+    full_name VARCHAR(100),
+    contact_no VARCHAR(15),
+    location VARCHAR(100),
+    experience INT,
+    skills VARCHAR(255),
+    education VARCHAR(255),
+    linkedin_url VARCHAR(255),
+    github_url VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (uid) REFERENCES user(uid) 
+);
+select * from user_profile;	
+drop table user_profile;
+-- insert into user_profile(uid,full_name,contact_no,location,experience,skills,education,linkedin_url,github_url,profile_image) values(1,"drashti",1234567890,"surat",4,"php","cs","http://localhost:8080/Job/Applicant_dashboard.jsp","http://localhost:8080/Job/Applicant_dashboard.jsp","admin.png");
+
+CREATE TABLE User_profile_img (
+    img_id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT,
+    profile_id INT,
+    img VARCHAR(255),
+    FOREIGN KEY (uid) REFERENCES user(uid), 
+    FOREIGN KEY (profile_id) REFERENCES user_profile(profile_id)
+);
+select * from User_profile_img;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- CREATE TABLE resumes_details (
+--     resume_id INT AUTO_INCREMENT PRIMARY KEY,
+--      uid INT,
+--     profile_id INT,
+--     first_name VARCHAR(50) NOT NULL,
+--     middle_name VARCHAR(50),
+--     last_name VARCHAR(50) NOT NULL,
+--     image_path VARCHAR(255),
+--     designation VARCHAR(100),
+--     address TEXT,
+--     phone_no VARCHAR(20),
+--     summary TEXT,
+--   
+--     achievement_title VARCHAR(100) NOT NULL,
+--     achievement_description TEXT,
+--     experiences_title VARCHAR(100) NOT NULL,
+--     organization VARCHAR(100) NOT NULL,
+--     location VARCHAR(100),
+--     experiences_start_date DATE,
+--     experiences_end_date DATE,
+--     experiences_description TEXT,
+--    school VARCHAR(100) NOT NULL,
+--     degree VARCHAR(100) NOT NULL,
+--     city VARCHAR(100),
+--     education_start_date DATE,
+--     graduation_date DATE,
+
+--     
+--     
+--     projects_title VARCHAR(100) NOT NULL,
+--     proj_link VARCHAR(255),
+--     projects_description TEXT,
+
+--     skill_name VARCHAR(100) NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+-- 	FOREIGN KEY (uid) REFERENCES user(uid), 
+--     FOREIGN KEY (profile_id) REFERENCES user_profile(profile_id)
+-- );
+-- select * from resumes_details;
+
+
+CREATE TABLE resumes_deatils (
+    resume_id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NOT NULL,
+    profile_id INT NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+    last_name VARCHAR(50) NOT NULL,
+    image_path VARCHAR(255),
+    designation VARCHAR(100),
+    address TEXT,
+    phone_no VARCHAR(20),
+    summary TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (uid) REFERENCES user(uid) ON DELETE CASCADE,
+    FOREIGN KEY (profile_id) REFERENCES user_profile(profile_id) ON DELETE CASCADE
+);
+
+CREATE TABLE achievements (
+    achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    resume_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    display_order INT,
+    FOREIGN KEY (resume_id) REFERENCES resumes(resume_id) ON DELETE CASCADE
+);
+
+CREATE TABLE experiences (
+    experience_id INT AUTO_INCREMENT PRIMARY KEY,
+    resume_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    organization VARCHAR(100) NOT NULL,
+    location VARCHAR(100),
+    start_date DATE,
+    end_date DATE,
+    description TEXT,
+    display_order INT,
+    FOREIGN KEY (resume_id) REFERENCES resumes(resume_id) ON DELETE CASCADE
+);
+
+CREATE TABLE education (
+    education_id INT AUTO_INCREMENT PRIMARY KEY,
+    resume_id INT NOT NULL,
+    school VARCHAR(100) NOT NULL,
+    degree VARCHAR(100) NOT NULL,
+    city VARCHAR(100),
+    start_date DATE,
+    graduation_date DATE,
+    description TEXT,
+    display_order INT,
+    FOREIGN KEY (resume_id) REFERENCES resumes(resume_id) ON DELETE CASCADE
+);
+
+CREATE TABLE projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
+    resume_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    link VARCHAR(255),
+    description TEXT,
+    display_order INT,
+    FOREIGN KEY (resume_id) REFERENCES resumes(resume_id) ON DELETE CASCADE
+);
+
+CREATE TABLE skills (
+    skill_id INT AUTO_INCREMENT PRIMARY KEY,
+    resume_id INT NOT NULL,
+    skill_name VARCHAR(100) NOT NULL,
+    display_order INT,
+    FOREIGN KEY (resume_id) REFERENCES resumes(resume_id) ON DELETE CASCADE
+);
